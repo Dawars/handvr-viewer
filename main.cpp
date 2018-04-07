@@ -1,21 +1,15 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include <QtGui>
-#include "ui/OpenGLWindow.h"
-#include "ui/TriangleWindow.h"
+#include <sensor/leapmotion/LeapData.h>
+#include "Leap.h"
 
 int main(int argc, char **argv) {
-    QGuiApplication app(argc, argv);
+    LeapData leapData;
 
-    QSurfaceFormat format;
-    format.setSamples(16);
-
-    TriangleWindow window;
-    window.setFormat(format);
-    window.resize(640, 480);
-    window.show();
-
-    window.setAnimating(true);
+    //qt
+    QApplication app(argc, argv);
+    MainWindow w;
+    w.show();
 
     return app.exec();
 }
