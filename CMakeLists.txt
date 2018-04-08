@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(handvr)
+project(handvr-viewer)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -8,6 +8,8 @@ add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-pedantic)
 #add_compile_options(-Werror)
+add_compile_options(-Werror=unused-variable)
+#add_compile_options(-fno-elide-constructors)
 #add_compile_options(-O0)
 
 # Leap
@@ -35,11 +37,12 @@ find_package(Qt5Gui REQUIRED)
 #find_package(Qt5Quick REQUIRED)
 
 
-set(UI_FILES mainwindow.ui mydialog.ui)
-set(SOURCE_FILES main.cpp mainwindow.cpp mainwindow.h mydialog.cpp mydialog.h mano/Mano.cpp mano/Mano.h sensor/leapmotion/LeapData.cpp sensor/leapmotion/LeapData.h)
+set(UI_FILES src/ui/mainwindow.ui src/ui/mydialog.ui)
+set(SOURCE_FILES src/main.cpp src/ui/mainwindow.cpp src/ui/mainwindow.h src/ui/mydialog.cpp src/ui/mydialog.h src/mano/Mano.cpp src/mano/Mano.h src/sensor/leapmotion/LeapData.cpp src/sensor/leapmotion/LeapData.h src/ui/widgets/HandWidget.cpp src/ui/widgets/HandWidget.h)
+include_directories(src/ui/widgets/)
 
-add_executable(handvr ${SOURCE_FILES} ${RESOURCE_FILES} ${UI_FILES})
+add_executable(handvr-viewer ${SOURCE_FILES} ${RESOURCE_FILES} ${UI_FILES})
 
-target_link_libraries(handvr Eigen3::Eigen)
-target_link_libraries(handvr Qt5::Widgets Qt5::Gui)
-target_link_libraries(handvr ${Leap_BUILD_LIBRARIES} )
+target_link_libraries(handvr-viewer Eigen3::Eigen)
+target_link_libraries(handvr-viewer Qt5::Widgets Qt5::Gui)
+target_link_libraries(handvr-viewer ${Leap_BUILD_LIBRARIES} )
