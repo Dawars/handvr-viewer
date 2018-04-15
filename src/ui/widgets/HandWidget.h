@@ -5,15 +5,29 @@
 #ifndef HANDVR_VIEWER_HANDWIDGET_H
 #define HANDVR_VIEWER_HANDWIDGET_H
 
+#include <memory>
+
 
 #include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#include <QOpenGLTexture>
+#include <QOpenGLShader>
+#include <QOpenGLBuffer>
+#include <QOpenGLVertexArrayObject>
+#include <src/sensor/leapmotion/LeapData.h>
+#include <QOpenGLDebugLogger>
+#include <src/util/LogHandler.h>
 
-class HandWidget : public QOpenGLWidget {
+class HandWidget : public QOpenGLWidget, protected QOpenGLFunctions {
 Q_OBJECT
+
+
 public:
     explicit HandWidget(QWidget *parent = 0);
 
     ~HandWidget();
+
+    void setModel(std::shared_ptr<LeapData> model);
 
 public slots:
 
@@ -24,6 +38,7 @@ public slots:
 
     void setZRotation(int angle);
 
+
 signals:
 
     // signaling rotation from mouse movement
@@ -32,6 +47,27 @@ signals:
     void yRotationChanged(int angle);
 
     void zRotationChanged(int angle);
+
+
+protected:
+    void initializeGL();
+
+    void resizeGL(int w, int h);
+
+    void paintGL();
+
+
+private:
+    std::unique_ptr<QOpenGLVertexArrayObject> m_vao;
+    std::unique_ptr<QOpenGLBuffer> m_vbo;
+    std::unique_ptr<QOpenGLBuffer> m_ibo;
+    std::unique_ptr<QOpenGLShaderProgram> m_program;
+    std::unique_ptr<QOpenGLShader> m_shader;
+    std::unique_ptr<QOpenGLTexture> m_texture;
+    std::shared_ptr<LeapData> model;
+
+    QOpenGLDebugLogger logger;
+    LogHandler logHandler;
 
 };
 

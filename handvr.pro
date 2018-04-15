@@ -24,15 +24,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    mydialog.cpp\
+        src/main.cpp \
+        src/ui/mainwindow.cpp \
+    src/ui/mydialog.cpp\
 
 
 HEADERS += \
-        mainwindow.h \
-    mydialog.h
+        src/ui/mainwindow.h \
+    src/ui/mydialog.h
 
 FORMS += \
-        mainwindow.ui \
-    mydialog.ui
+        src/ui/mainwindow.ui \
+    src/ui/mydialog.ui

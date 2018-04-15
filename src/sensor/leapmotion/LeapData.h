@@ -10,7 +10,7 @@
 // Model??
 class LeapData : public Leap::Listener {
 public:
-    LeapData(QMainWindow *window);
+    LeapData();
 
     ~LeapData();
 
@@ -18,10 +18,14 @@ public:
 
     virtual void onFrame(const Leap::Controller &);
 
+    int getNumHands() const;
+
+    const Leap::HandList &getHandList() const;
+
 private:
     Leap::Frame frame;
+    Leap::HandList handList;
 
-    int getNumHands() const;
 
 //    QMainWindow *window;
 };

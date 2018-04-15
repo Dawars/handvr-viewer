@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <file>Common.frag</file>
+        <file>Common.vert</file>
+    </qresource>
+</RCC>

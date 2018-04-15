@@ -23,8 +23,8 @@ find_package(Leap REQUIRED)
 include_directories(${Leap_INCLUDE_DIR})
 
 # Qt
-#set(RESOURCE_FOLDER res)
-#set(RESOURCE_FILES ${RESOURCE_FOLDER}/resources.qrc)
+set(RESOURCE_FOLDER res)
+set(RESOURCE_FILES ${RESOURCE_FOLDER}/resources.qrc)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -38,10 +38,10 @@ find_package(Qt5Gui REQUIRED)
 
 
 set(UI_FILES src/ui/mainwindow.ui src/ui/mydialog.ui)
-set(SOURCE_FILES src/main.cpp src/ui/mainwindow.cpp src/ui/mainwindow.h src/ui/mydialog.cpp src/ui/mydialog.h src/mano/Mano.cpp src/mano/Mano.h src/sensor/leapmotion/LeapData.cpp src/sensor/leapmotion/LeapData.h src/ui/widgets/HandWidget.cpp src/ui/widgets/HandWidget.h)
+set(SOURCE_FILES src/main.cpp src/ui/mainwindow.cpp src/ui/mainwindow.h src/ui/mydialog.cpp src/ui/mydialog.h src/mano/Mano.cpp src/mano/Mano.h src/sensor/leapmotion/LeapData.cpp src/sensor/leapmotion/LeapData.h src/ui/widgets/HandWidget.cpp src/ui/widgets/HandWidget.h src/util/LogHandler.cpp src/util/LogHandler.h)
 include_directories(src/ui/widgets/)
 
-add_executable(handvr-viewer ${SOURCE_FILES} ${RESOURCE_FILES} ${UI_FILES})
+add_executable(handvr-viewer ${SOURCE_FILES} ${RESOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})
 
 target_link_libraries(handvr-viewer Eigen3::Eigen)
 target_link_libraries(handvr-viewer Qt5::Widgets Qt5::Gui)

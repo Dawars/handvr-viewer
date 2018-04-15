@@ -21,6 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    std::shared_ptr<LeapData> model;
 };
 
 #endif // MAINWINDOW_H

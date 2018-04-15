@@ -8,7 +8,7 @@
 using namespace Leap;
 Controller controller;
 
-LeapData::LeapData(QMainWindow *window) {
+LeapData::LeapData() {
     controller.addListener(*this);
 }
 
@@ -19,6 +19,8 @@ LeapData::~LeapData() {
 
 
 void LeapData::onFrame(const Controller &controller) {
+    handList = frame.hands();
+
     frame = controller.frame();
     std::cout << "Frame id: " << frame.id()
               << ", timestamp: " << frame.timestamp()
@@ -28,6 +30,10 @@ void LeapData::onFrame(const Controller &controller) {
               << ", gestures: " << frame.gestures().count() << std::endl;
 
 //    window->updatedHandData(); // todo signal
+}
+
+const HandList &LeapData::getHandList() const {
+    return handList;
 }
 
 void LeapData::onConnect(const Controller &controller) {
