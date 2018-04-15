@@ -51,18 +51,25 @@ void HandWidget::initializeGL() {
         qDebug() << "Debug logger not enabled";
     }
 
+//    m_shader = new QOpenGLShader(QOpenGLShader::ShaderTypeBit::Vertex);
+//    m_shader->compileSourceFile();
+    m_program = std::make_unique<QOpenGLShaderProgram>();
+    m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Common.vert");
+    m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Common.frag");
+    m_program->link();
+
     m_vao->create();
     if (m_vao->isCreated())
         m_vao->bind();
 
     if (m_vbo->create()) {
         m_vbo->bind();
-        m_vbo->allocate(positions, 4*2 * sizeof(float));
+        m_vbo->allocate(positions, 4 * 2 * sizeof(float));
         m_vbo->setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
 
 
-        glVertexAttribPointer(0, 2, GL_FLOAT, false, 2 * sizeof(float), 0);
-        glEnableVertexAttribArray(0);
+        m_program->setAttributeBuffer("position", GL_FLOAT, 0, 2, 2 * sizeof(float));
+        m_program->enableAttributeArray(0);
 
 
         m_ibo->create();
@@ -73,12 +80,6 @@ void HandWidget::initializeGL() {
         m_vbo.release();
     }
     //    m_texture = new QOpenGLTexture(QImage(...));
-
-//    m_shader = new QOpenGLShader(QOpenGLShader::ShaderTypeBit::Vertex);
-//    m_shader->compileSourceFile();
-    m_program = std::make_unique<QOpenGLShaderProgram>();
-    m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Common.vert");
-    m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Common.frag");
 
 //    QOpenGLDebugMessage()
     // axis vert array
@@ -93,6 +94,8 @@ void HandWidget::paintGL() {
     model->getNumHands();
 
     m_program->bind();
+    m_program->setUniformValue("u_Color", QVector4D(1, 0, 1, 1));
+
     m_vao->bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 
