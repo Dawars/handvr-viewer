@@ -58,6 +58,7 @@ protected:
 
 
 private:
+    QVector4D color;
     std::unique_ptr<QOpenGLVertexArrayObject> m_vao;
     std::unique_ptr<QOpenGLBuffer> m_vbo;
     std::unique_ptr<QOpenGLBuffer> m_ibo;

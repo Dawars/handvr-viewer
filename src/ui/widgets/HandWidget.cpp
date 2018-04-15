@@ -5,12 +5,11 @@
 #include "HandWidget.h"
 #include <memory>
 #include <utility>
+#include <QTimer>
 
 HandWidget::HandWidget(QWidget *parent) : QOpenGLWidget(parent),
-                                          m_vao(std::make_unique<QOpenGLVertexArrayObject>()),
-                                          m_vbo(std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::VertexBuffer)),
-                                          m_ibo(std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::IndexBuffer)),
-                                          logger{}, logHandler() {
+                                          logger{}, logHandler(),
+                                          color{1, 0, 1, 1} {
 
 
 }
@@ -21,8 +20,9 @@ HandWidget::~HandWidget() {
     makeCurrent();
 
 
-//    m_vbo.destroy();
-//    m_vao.destroy();
+//    m_vbo->destroy();
+//    m_ibo->destroy();
+//    m_vao->destroy();
 
     doneCurrent();
 }
@@ -40,16 +40,20 @@ unsigned short indices[] = {
 };
 
 void HandWidget::initializeGL() {
-    makeCurrent();
     initializeOpenGLFunctions();
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    if (logger.initialize()) {
+    /*if (logger.initialize()) {// will get destroyed out of scope
         connect(&logger, &QOpenGLDebugLogger::messageLogged, &logHandler, &LogHandler::handleLoggedMessage);
         logger.startLogging();
     } else {
         qDebug() << "Debug logger not enabled";
-    }
+    }*/
+
+
+    m_vao = std::make_unique<QOpenGLVertexArrayObject>();
+    m_vbo = std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::VertexBuffer);
+    m_ibo = std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::IndexBuffer);
 
 //    m_shader = new QOpenGLShader(QOpenGLShader::ShaderTypeBit::Vertex);
 //    m_shader->compileSourceFile();
@@ -83,24 +87,20 @@ void HandWidget::initializeGL() {
 
 //    QOpenGLDebugMessage()
     // axis vert array
-
-
 }
 
 void HandWidget::paintGL() {
-    makeCurrent();
     glClear(GL_COLOR_BUFFER_BIT);
 
     model->getNumHands();
 
     m_program->bind();
-    m_program->setUniformValue("u_Color", QVector4D(1, 0, 1, 1));
+    m_program->setUniformValue("u_Color", color);
 
     m_vao->bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 
-
-    doneCurrent();
+//    update();
 }
 
 void HandWidget::resizeGL(int width, int height) {
@@ -110,14 +110,19 @@ void HandWidget::resizeGL(int width, int height) {
 }
 
 void HandWidget::setXRotation(int angle) {
-
+    color.setX(angle / 255.f);
+    repaint();
 }
 
 void HandWidget::setYRotation(int angle) {
+    color.setY(angle / 255.f);
+    repaint();
 
 }
 
 void HandWidget::setZRotation(int angle) {
+    color.setZ(angle / 255.f);
+    repaint();
 
 }
 

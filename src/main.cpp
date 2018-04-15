@@ -16,6 +16,8 @@ int main(int argc, char **argv) {
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setOption(QSurfaceFormat::DebugContext);
     format.setSamples(4);
+    format.setSwapInterval(1);
+
     QSurfaceFormat::setDefaultFormat(format);
 
     MainWindow w;
