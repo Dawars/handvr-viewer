@@ -7,21 +7,36 @@
 
 #include <Leap.h>
 #include "LeapProvider.h"
+#include "HandRepresentation.h"
+#include "HandPool.h"
 
-// Model??
+// Hand Controller
 class LeapController {
 public:
     LeapController();
 
     ~LeapController();
 
-    virtual void OnUpdateFrame(const Leap::Frame &);
 
 protected:
+    virtual void OnUpdateFrame(const Leap::Frame &);
+
     std::unique_ptr<LeapProvider> provider;
 
-private:
-//    Leap::Frame frame;
+    /**
+   * Updates HandRepresentations based in the specified HandRepresentation Dictionary.
+   * Active HandRepresentation instances are updated if the hand they represent is still
+   * present in the Provider's CurrentFrame; otherwise, the HandRepresentation is removed. If new
+   * Leap Hand objects are present in the Leap HandRepresentation Dictionary, new HandRepresentations are
+   * created and added to the dictionary.
+   * @param all_hand_reps = A dictionary of Leap Hand ID's with a paired HandRepresentation
+   * @param frame The Leap Frame containing Leap Hand data for each currently tracked hand
+   */
+    void updateHandRepresentations(std::map<int, HandRepresentation>, Leap::Frame);
+
+    std::map<int, HandRepresentation> graphicsHandReps;
+    HandPool pool;
+
 
 };
 
