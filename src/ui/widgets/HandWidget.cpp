@@ -8,8 +8,8 @@
 #include <QTimer>
 
 HandWidget::HandWidget(QWidget *parent) : QOpenGLWidget(parent),
-                                          logger{}, logHandler(),
-                                          color{1, 0, 1, 1} {
+                                          color{1, 0, 1, 1},
+                                          logger{}, logHandler{} {
 
 
 }
@@ -87,12 +87,12 @@ void HandWidget::initializeGL() {
 
 //    QOpenGLDebugMessage()
     // axis vert array
+
+
 }
 
 void HandWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
-
-    model->getNumHands();
 
     m_program->bind();
     m_program->setUniformValue("u_Color", color);
@@ -100,7 +100,7 @@ void HandWidget::paintGL() {
     m_vao->bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 
-//    update();
+
 }
 
 void HandWidget::resizeGL(int width, int height) {
@@ -126,6 +126,6 @@ void HandWidget::setZRotation(int angle) {
 
 }
 
-void HandWidget::setModel(std::shared_ptr<LeapData> model) {
-    this->model = std::move(model);
+void HandWidget::setModel(std::shared_ptr<LeapController> model) {
+    this->model = model;
 }

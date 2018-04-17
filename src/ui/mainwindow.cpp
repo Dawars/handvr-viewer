@@ -11,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 
-    model = std::make_shared<LeapData>();
-    ui->myGLWidget->setModel(model);
+    leapController = std::make_shared<LeapController>();
+    ui->myGLWidget->setModel(leapController);
 
 }
 

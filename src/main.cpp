@@ -1,6 +1,6 @@
 #include "ui/mainwindow.h"
 #include <QApplication>
-#include "sensor/leapmotion/LeapData.h"
+#include "src/sensor/leapmotion/LeapController.h"
 #include <Leap.h>
 #include <QSurfaceFormat>
 

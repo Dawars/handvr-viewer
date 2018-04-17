@@ -38,7 +38,7 @@ find_package(Qt5Gui REQUIRED)
 
 
 set(UI_FILES src/ui/mainwindow.ui src/ui/mydialog.ui)
-set(SOURCE_FILES src/main.cpp src/ui/mainwindow.cpp src/ui/mainwindow.h src/ui/mydialog.cpp src/ui/mydialog.h src/mano/Mano.cpp src/mano/Mano.h src/sensor/leapmotion/LeapData.cpp src/sensor/leapmotion/LeapData.h src/ui/widgets/HandWidget.cpp src/ui/widgets/HandWidget.h src/util/LogHandler.cpp src/util/LogHandler.h)
+set(SOURCE_FILES src/main.cpp src/ui/mainwindow.cpp src/ui/mainwindow.h src/ui/mydialog.cpp src/ui/mydialog.h src/mano/Mano.cpp src/mano/Mano.h src/sensor/leapmotion/LeapController.cpp src/sensor/leapmotion/LeapController.h src/ui/widgets/HandWidget.cpp src/ui/widgets/HandWidget.h src/util/LogHandler.cpp src/util/LogHandler.h src/sensor/leapmotion/LeapProvider.cpp src/sensor/leapmotion/LeapProvider.h src/sensor/leapmotion/LeapServiceProvider.cpp src/sensor/leapmotion/LeapServiceProvider.h)
 include_directories(src/ui/widgets/)
 
 add_executable(handvr-viewer ${SOURCE_FILES} ${RESOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})
