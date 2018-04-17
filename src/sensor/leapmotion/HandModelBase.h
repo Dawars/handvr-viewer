@@ -14,11 +14,17 @@ public:
         Left, Right
     };
 
-    virtual void UpdateHand();
+    HandModelBase() {}
 
-    virtual Leap::Hand GetLeapHand();
+    virtual ~HandModelBase() {}
 
-    virtual void SetLeapHand(Leap::Hand hand);
+
+public:
+    virtual void UpdateHand() {};
+
+    virtual Leap::Hand GetLeapHand() { assert(false && "abstract"); };
+
+    virtual void SetLeapHand(Leap::Hand hand) {};
 };
 
 

@@ -34,33 +34,31 @@ void LeapController::OnUpdateFrame(const Leap::Frame &frame) {
 
 }
 
-void LeapController::updateHandRepresentations(std::map<int, HandRepresentation> all_hand_reps, Leap::Frame frame) {
+void LeapController::updateHandRepresentations(std::map<int, HandRepresentation> &all_hand_reps, Leap::Frame frame) {
     for (int i = 0; i < frame.hands().count(); i++) {
         auto curHand = frame.hands()[i];
-        std::shared_ptr<HandRepresentation> rep;
+
         auto it = all_hand_reps.find(curHand.id());
         if (it != all_hand_reps.end()) {
-            rep = pool.MakeHandRepresentation(curHand);
-            if (rep != nullptr) {
-                all_hand_reps.insert(curHand.id(), rep);
-            }
+            HandRepresentation rep = pool.MakeHandRepresentation(curHand);
+            all_hand_reps.insert(std::pair(curHand.id(), rep));
+            rep.IsMarked = true;
+            rep.UpdateRepresentation(curHand);
+            rep.LastUpdatedTime = (int) frame.timestamp();
+
         }
-        if (rep != nullptr) {
-            rep->IsMarked = true;
-            rep->UpdateRepresentation(curHand);
-            rep->LastUpdatedTime = (int) frame.timestamp();
-        }
+
     }
 
     /** Mark-and-sweep to finish unused HandRepresentations */
-   /* HandRepresentation toBeDeleted = null;
-    for (auto it = all_hand_reps.GetEnumerator(); it.MoveNext();) {
-        var r = it.Current;
-        if (r.Value != null) {
-            if (r.Value.IsMarked) {
-                r.Value.IsMarked = false;
-            } else {
-                *//** Initialize toBeDeleted with a value to be deleted *//*
+    /* HandRepresentation toBeDeleted = null;
+     for (auto it = all_hand_reps.GetEnumerator(); it.MoveNext();) {
+         var r = it.Current;
+         if (r.Value != null) {
+             if (r.Value.IsMarked) {
+                 r.Value.IsMarked = false;
+             } else {
+                 *//** Initialize toBeDeleted with a value to be deleted *//*
                 //Debug.Log("Finishing");
                 toBeDeleted = r.Value;
             }

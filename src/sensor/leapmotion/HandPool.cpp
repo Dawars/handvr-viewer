@@ -4,6 +4,7 @@
 
 #include "HandPool.h"
 #include "HandModelBase.h"
+#include "HandRepresentation.h"
 
 /**
      * MakeHandRepresentation receives a Hand and combines that with a HandModelBase to create a HandRepresentation
@@ -11,10 +12,10 @@
      * @param modelType Filters for a type of hand model, for example, physics or graphics hands.
      */
 
-std::shared_ptr<HandRepresentation> HandPool::MakeHandRepresentation(Leap::Hand hand) {
+HandRepresentation HandPool::MakeHandRepresentation(Leap::Hand hand) {
     HandModelBase::Chirality handChirality = hand.isRight() ? HandModelBase::Chirality::Right
                                                             : HandModelBase::Chirality::Left;
-    std::shared_ptr<HandRepresentation> handRep = std::make_shared(this, hand, handChirality);
+    HandRepresentation handRep {this, hand, handChirality};
 
     // todo
     /*for (int i = 0; i < ModelPool.Count; i++) {

@@ -10,7 +10,7 @@ add_compile_options(-pedantic)
 #add_compile_options(-Werror)
 add_compile_options(-Werror=unused-variable)
 #add_compile_options(-fno-elide-constructors)
-#add_compile_options(-O0)
+#add_compile_options(-O3)
 
 # Leap
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")

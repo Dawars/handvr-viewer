@@ -6,6 +6,7 @@
 #define HANDVR_LEAPDATA_H
 
 #include <Leap.h>
+#include <map>
 #include "LeapProvider.h"
 #include "HandRepresentation.h"
 #include "HandPool.h"
@@ -32,7 +33,7 @@ protected:
    * @param all_hand_reps = A dictionary of Leap Hand ID's with a paired HandRepresentation
    * @param frame The Leap Frame containing Leap Hand data for each currently tracked hand
    */
-    void updateHandRepresentations(std::map<int, HandRepresentation>, Leap::Frame);
+    void updateHandRepresentations(std::map<int, HandRepresentation>&, Leap::Frame);
 
     std::map<int, HandRepresentation> graphicsHandReps;
     HandPool pool;
