@@ -3,5 +3,7 @@
     <qresource>
         <file>Common.frag</file>
         <file>Common.vert</file>
+        <file>Axis.frag</file>
+        <file>Axis.vert</file>
     </qresource>
 </RCC>
