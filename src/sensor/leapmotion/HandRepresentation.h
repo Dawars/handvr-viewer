@@ -22,20 +22,20 @@ public:
 /** Calls Updates in HandModelBases that are part of this HandRepresentation */
     void UpdateRepresentation(Leap::Hand hand);
 
-protected:
-    HandModelBase::Chirality RepChirality;
-public:
     HandModelBase::Chirality getRepChirality() const;
 
     const Leap::Hand &getMostRecentHand() const;
 
+    /** To be called if the HandRepresentation no longer has a Leap Hand. */
+    void Finish();
+
+    int getHandID() const;
+
 protected:
+    HandModelBase::Chirality RepChirality;
     Leap::Hand MostRecentHand;
 private:
     int HandID;
-public:
-    int getHandID() const;
-
 };
 
 

@@ -126,6 +126,6 @@ void HandWidget::setZRotation(int angle) {
 
 }
 
-void HandWidget::setModel(std::shared_ptr<LeapController> model) {
+void HandWidget::setModel(std::shared_ptr<LeapHandController> model) {
     this->model = model;
 }

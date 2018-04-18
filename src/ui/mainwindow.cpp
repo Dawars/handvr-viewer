@@ -1,5 +1,6 @@
 
 #include <QtWidgets>
+#include <src/sensor/leapmotion/LeapServiceProvider.h>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -11,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 
-    leapController = std::make_shared<LeapController>();
+    leapController = std::make_shared<LeapHandController>(std::make_shared<LeapServiceProvider>());
     ui->myGLWidget->setModel(leapController);
 
 }

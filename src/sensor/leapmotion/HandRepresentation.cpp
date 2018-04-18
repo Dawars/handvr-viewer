@@ -27,17 +27,23 @@ const Leap::Hand &HandRepresentation::getMostRecentHand() const {
 
 void HandRepresentation::UpdateRepresentation(Leap::Hand hand) {
     MostRecentHand = hand;
-    if (!handModels.empty()) {
-        for (int i = 0; i < handModels.size(); i++) {
-            /*if (handModels[i].group != null && handModels[i].group.HandPostProcesses.GetPersistentEventCount() > 0) {
-                PostProcessHand.CopyFrom(hand);
-                handModels[i].group.HandPostProcesses.Invoke(PostProcessHand);
-                handModels[i].SetLeapHand(PostProcessHand);
-            } else {*/
-            handModels[i].SetLeapHand(hand);
+    for (int i = 0; i < handModels.size(); i++) {
+        /*if (handModels[i].group != null && handModels[i].group.HandPostProcesses.GetPersistentEventCount() > 0) {
+            PostProcessHand.CopyFrom(hand);
+            handModels[i].group.HandPostProcesses.Invoke(PostProcessHand);
+            handModels[i].SetLeapHand(PostProcessHand);
+        } else {*/
+        handModels[i].SetLeapHand(hand);
 //                }
-            handModels[i].UpdateHand();
-        }
+        handModels[i].UpdateHand();
     }
+}
 
+void HandRepresentation::Finish() {
+    for (auto &handModel : handModels) {
+        handModel.FinishHand();
+        parent->ReturnToPool(handModel);
+//        handModel = null;
+    }
+//    parent->RemoveHandRepresentation(*this);
 }

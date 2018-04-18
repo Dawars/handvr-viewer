@@ -14,7 +14,7 @@
 #include <QOpenGLShader>
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
-#include <src/sensor/leapmotion/LeapController.h>
+#include <src/sensor/leapmotion/LeapHandController.h>
 #include <QOpenGLDebugLogger>
 #include <src/util/LogHandler.h>
 
@@ -27,7 +27,7 @@ public:
 
     ~HandWidget();
 
-    void setModel(std::shared_ptr<LeapController> model);
+    void setModel(std::shared_ptr<LeapHandController> model);
 
 public slots:
 
@@ -65,7 +65,7 @@ private:
     std::unique_ptr<QOpenGLBuffer> m_ibo;
     std::unique_ptr<QOpenGLShaderProgram> m_program;
     std::unique_ptr<QOpenGLTexture> m_texture;
-    std::shared_ptr<LeapController> model;
+    std::shared_ptr<LeapHandController> model;
 
     QOpenGLDebugLogger logger;
     LogHandler logHandler;

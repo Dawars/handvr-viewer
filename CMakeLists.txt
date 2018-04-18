@@ -10,7 +10,7 @@ add_compile_options(-pedantic)
 #add_compile_options(-Werror)
 add_compile_options(-Werror=unused-variable)
 #add_compile_options(-fno-elide-constructors)
-#add_compile_options(-O3)
+add_compile_options(-O0)
 
 # Leap
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
@@ -43,7 +43,7 @@ set(SOURCE_FILES
         src/ui/mainwindow.cpp src/ui/mainwindow.h
         src/ui/mydialog.cpp src/ui/mydialog.h
         src/mano/Mano.cpp src/mano/Mano.h
-        src/sensor/leapmotion/LeapController.cpp src/sensor/leapmotion/LeapController.h
+        src/sensor/leapmotion/LeapHandController.cpp src/sensor/leapmotion/LeapHandController.h
         src/ui/widgets/HandWidget.cpp src/ui/widgets/HandWidget.h
         src/util/LogHandler.cpp src/util/LogHandler.h
         src/sensor/leapmotion/LeapProvider.cpp src/sensor/leapmotion/LeapProvider.h

@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "src/sensor/leapmotion/LeapController.h"
+#include "src/sensor/leapmotion/LeapHandController.h"
 
 namespace Ui {
     class MainWindow;
@@ -21,7 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    std::shared_ptr<LeapController> leapController;
+    std::shared_ptr<LeapHandController> leapController;
 };
 
 #endif // MAINWINDOW_H

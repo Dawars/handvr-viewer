@@ -12,17 +12,17 @@
 #include "HandPool.h"
 
 // Hand Controller
-class LeapController {
+class LeapHandController {
 public:
-    LeapController();
+    LeapHandController(std::shared_ptr<LeapProvider>);
 
-    ~LeapController();
+    ~LeapHandController();
 
 
 protected:
     virtual void OnUpdateFrame(const Leap::Frame &);
 
-    std::unique_ptr<LeapProvider> provider;
+    std::shared_ptr<LeapProvider> provider;
 
     /**
    * Updates HandRepresentations based in the specified HandRepresentation Dictionary.
@@ -33,9 +33,9 @@ protected:
    * @param all_hand_reps = A dictionary of Leap Hand ID's with a paired HandRepresentation
    * @param frame The Leap Frame containing Leap Hand data for each currently tracked hand
    */
-    void updateHandRepresentations(std::map<int, HandRepresentation>&, Leap::Frame);
+    void updateHandRepresentations(std::map<int, std::shared_ptr<HandRepresentation>>, const Leap::Frame&);
 
-    std::map<int, HandRepresentation> graphicsHandReps;
+    std::map<int, std::shared_ptr<HandRepresentation>> graphicsHandReps;
     HandPool pool;
 
 

@@ -3,3 +3,14 @@
 //
 
 #include "HandModelBase.h"
+
+void HandModelBase::FinishHand() {
+    /*if (OnFinish != null) {
+        OnFinish();
+    }*/
+    isTracked = false;
+}
+
+bool HandModelBase::IsTracked() const {
+    return isTracked;
+}

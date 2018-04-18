@@ -9,6 +9,7 @@
 #include <Leap.h>
 
 class HandRepresentation;
+class HandModelBase;
 
 class HandPool {
 public:
@@ -16,10 +17,14 @@ public:
     * MakeHandRepresentation receives a Hand and combines that with a HandModelBase to create a HandRepresentation
     * @param hand The Leap Hand data to be drive a HandModelBase
     */
-    HandRepresentation MakeHandRepresentation(Leap::Hand);
+    std::shared_ptr<HandRepresentation> MakeHandRepresentation(Leap::Hand);
+
+    void RemoveHandRepresentation(HandRepresentation );
+
+    void ReturnToPool(HandModelBase &model);
 
 private:
-    std::vector<HandRepresentation> activeHandReps;
+    std::vector<std::shared_ptr<HandRepresentation>> activeHandReps;
 
 };
 

@@ -19,12 +19,19 @@ public:
     virtual ~HandModelBase() {}
 
 
-public:
     virtual void UpdateHand() {};
 
     virtual Leap::Hand GetLeapHand() { assert(false && "abstract"); };
 
     virtual void SetLeapHand(Leap::Hand hand) {};
+
+    virtual void FinishHand();
+
+
+private:
+    bool isTracked = false;
+public:
+    bool IsTracked() const;
 };
 
 
