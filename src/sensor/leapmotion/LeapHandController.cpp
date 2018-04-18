@@ -34,10 +34,9 @@ void LeapHandController::OnUpdateFrame(const Leap::Frame &frame) {
 
 }
 
-void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr<HandRepresentation>> all_hand_reps,
-                                                   const Leap::Frame& frame) {
-    for (int i = 0; i < frame.hands().count(); i++) {
-        auto curHand = frame.hands()[i];
+void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr<HandRepresentation>>& all_hand_reps,
+                                                   const Leap::Frame &frame) {
+    for (auto& curHand : frame.hands()) {
 
         auto it = all_hand_reps.find(curHand.id());
         if (it == all_hand_reps.end()) { // no hand representation, create new
@@ -53,8 +52,7 @@ void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr
 
     /** Mark-and-sweep to finish unused HandRepresentations */
     std::shared_ptr<HandRepresentation> toBeDeleted;
-    for (auto &r : all_hand_reps) {
-//         if (r.second != null) { // never null?
+    for (auto r : all_hand_reps) {
         if (r.second->IsMarked) {
             r.second->IsMarked = false;
         } else {
@@ -62,7 +60,6 @@ void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr
             //Debug.Log("Finishing");
             toBeDeleted = r.second;
         }
-//        }
     }
     /**Inform the representation that we will no longer be giving it any hand updates
      * because the corresponding hand has gone away */

@@ -5,7 +5,9 @@
 #include "HandPool.h"
 #include "HandModelBase.h"
 #include "HandRepresentation.h"
+#include "SkeletalHand.h"
 #include <algorithm>
+#include <memory>
 
 /**
      * MakeHandRepresentation receives a Hand and combines that with a HandModelBase to create a HandRepresentation
@@ -16,32 +18,38 @@
 std::shared_ptr<HandRepresentation> HandPool::MakeHandRepresentation(Leap::Hand hand) {
     HandModelBase::Chirality handChirality = hand.isRight() ? HandModelBase::Chirality::Right
                                                             : HandModelBase::Chirality::Left;
-    auto handRep= std::make_shared<HandRepresentation>(this, hand, handChirality);
+    auto handRep = std::make_shared<HandRepresentation>(this, hand, handChirality);
 
-    // todo
-    /*for (int i = 0; i < ModelPool.Count; i++) {
-        ModelGroup group = ModelPool[i];
-        if (group.IsEnabled) {
-            HandModelBase model = group.TryGetModel(handChirality);
-            if (model != null) {
-                handRep.AddModel(model);
-                if (!modelToHandRepMapping.ContainsKey(model)) {
-                    model.group = group;
-                    modelToHandRepMapping.Add(model, handRep);
-                }
-            }
-        }
-    }*/
+    /*    for (int i = 0; i < ModelPool.Count; i++) {
+          ModelGroup group = ModelPool[i];
+          if (group.IsEnabled) {
+              HandModelBase model = group.TryGetModel(handChirality);
+              if (model != null) {
+                  handRep.AddModel(model);
+                  if (!modelToHandRepMapping.ContainsKey(model)) {
+                      model.group = group;
+                      modelToHandRepMapping.Add(model, handRep);
+                  }
+              }
+          }
+      }*/
+    std::shared_ptr<HandModelBase> model = std::make_shared<SkeletalHand>();
+    handRep->AddModel(model);
     activeHandReps.push_back(handRep);
-    return handRep;// todo shared
+    return handRep;
 }
 
-void HandPool::RemoveHandRepresentation(HandRepresentation handRepresentation) {
-//    activeHandReps.erase(std::remove(activeHandReps.begin(), activeHandReps.end(), handRepresentation),
-//                         activeHandReps.end());//delete by value
+void HandPool::RemoveHandRepresentation(HandRepresentation *handRepresentation) {
+    auto it = std::find_if(activeHandReps.begin(), activeHandReps.end(), [&](std::shared_ptr<HandRepresentation> p) {
+        return &*p == handRepresentation; // assumes MyType has operator==
+    });
+
+    if (it != activeHandReps.end()) {
+        activeHandReps.erase(it);
+    }
 }
 
-void HandPool::ReturnToPool(HandModelBase &model) {
+void HandPool::ReturnToPool(std::shared_ptr<HandModelBase> model) {
     /* ModelGroup modelGroup;
      bool groupFound = modelGroupMapping.TryGetValue(model, out modelGroup);
      Assert.IsTrue(groupFound);

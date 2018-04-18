@@ -14,16 +14,18 @@ public:
         Left, Right
     };
 
-    HandModelBase() {}
-
-    virtual ~HandModelBase() {}
+    virtual ~HandModelBase() = default;
 
 
-    virtual void UpdateHand() {};
+    virtual Leap::Hand GetLeapHand() const = 0;
 
-    virtual Leap::Hand GetLeapHand() { assert(false && "abstract"); };
+    virtual void SetLeapHand(Leap::Hand hand) = 0;
 
-    virtual void SetLeapHand(Leap::Hand hand) {};
+    virtual void InitHand() = 0;
+
+    virtual void BeginHand();
+
+    virtual void UpdateHand() = 0;
 
     virtual void FinishHand();
 
@@ -32,6 +34,10 @@ private:
     bool isTracked = false;
 public:
     bool IsTracked() const;
+
+protected:
+    HandModelBase() = default;
+
 };
 
 

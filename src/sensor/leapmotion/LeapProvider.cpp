@@ -10,16 +10,8 @@ void LeapProvider::addListener(callback_function funct) {
     listeners.push_back(funct);
 }
 
-LeapProvider::LeapProvider() {
-
-}
-
 void LeapProvider::dispatchUpdateFrameEvent(const Leap::Frame &frame) {
     for (auto &update : listeners) {
         update(frame);
     }
-}
-
-LeapProvider::~LeapProvider() {
-
 }

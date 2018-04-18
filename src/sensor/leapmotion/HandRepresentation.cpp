@@ -27,23 +27,40 @@ const Leap::Hand &HandRepresentation::getMostRecentHand() const {
 
 void HandRepresentation::UpdateRepresentation(Leap::Hand hand) {
     MostRecentHand = hand;
-    for (int i = 0; i < handModels.size(); i++) {
-        /*if (handModels[i].group != null && handModels[i].group.HandPostProcesses.GetPersistentEventCount() > 0) {
+    for (auto &handModel : handModels) {
+        /*if (handModel.group != null && handModel.group.HandPostProcesses.GetPersistentEventCount() > 0) {
             PostProcessHand.CopyFrom(hand);
-            handModels[i].group.HandPostProcesses.Invoke(PostProcessHand);
-            handModels[i].SetLeapHand(PostProcessHand);
+            handModel.group.HandPostProcesses.Invoke(PostProcessHand);
+            handModel.SetLeapHand(PostProcessHand);
         } else {*/
-        handModels[i].SetLeapHand(hand);
+        handModel->SetLeapHand(hand); // update Leap::Hand
 //                }
-        handModels[i].UpdateHand();
+        handModel->UpdateHand(); // update model based on Leap::Hand
     }
 }
 
 void HandRepresentation::Finish() {
     for (auto &handModel : handModels) {
-        handModel.FinishHand();
+        handModel->FinishHand();
         parent->ReturnToPool(handModel);
-//        handModel = null;
+        handModel = nullptr;
     }
-//    parent->RemoveHandRepresentation(*this);
+    parent->RemoveHandRepresentation(this);
+}
+
+void HandRepresentation::AddModel(std::shared_ptr<HandModelBase> model) {
+    handModels.push_back(model); // fixme add model
+    /*if (model->GetLeapHand() == nullptr) {
+        model->SetLeapHand(MostRecentHand);
+        model->InitHand();
+        model->BeginHand();
+        model->UpdateHand();
+    } else {
+        model->SetLeapHand(MostRecentHand);
+        model->BeginHand();
+    }*/
+}
+
+void HandRepresentation::RemoveModel(std::shared_ptr<HandModelBase> model) {
+    handModels.erase(std::remove(handModels.begin(), handModels.end(), model), handModels.end());
 }

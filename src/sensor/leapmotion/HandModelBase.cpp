@@ -14,3 +14,11 @@ void HandModelBase::FinishHand() {
 bool HandModelBase::IsTracked() const {
     return isTracked;
 }
+
+void HandModelBase::BeginHand() {
+/* // fire event
+    if (OnBegin != null) {
+        OnBegin();
+    }*/
+    isTracked = true;
+}

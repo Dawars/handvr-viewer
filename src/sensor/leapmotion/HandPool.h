@@ -19,9 +19,9 @@ public:
     */
     std::shared_ptr<HandRepresentation> MakeHandRepresentation(Leap::Hand);
 
-    void RemoveHandRepresentation(HandRepresentation );
+    void RemoveHandRepresentation(HandRepresentation* );
 
-    void ReturnToPool(HandModelBase &model);
+    void ReturnToPool(std::shared_ptr<HandModelBase> model);
 
 private:
     std::vector<std::shared_ptr<HandRepresentation>> activeHandReps;

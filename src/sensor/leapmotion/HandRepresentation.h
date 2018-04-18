@@ -15,12 +15,16 @@ public:
     int LastUpdatedTime;
     bool IsMarked;
     Leap::Hand PostProcessHand;
-    std::vector<HandModelBase> handModels;
+    std::vector<std::shared_ptr<HandModelBase>> handModels; // heterogen collection for hand rendering?
 
     HandRepresentation(HandPool *parent, Leap::Hand hand, HandModelBase::Chirality repChirality);
 
 /** Calls Updates in HandModelBases that are part of this HandRepresentation */
     void UpdateRepresentation(Leap::Hand hand);
+
+    void AddModel(std::shared_ptr<HandModelBase> model);
+
+    void RemoveModel(std::shared_ptr<HandModelBase> model);
 
     HandModelBase::Chirality getRepChirality() const;
 

@@ -10,13 +10,14 @@
 
 class LeapProvider {
 protected:
-    LeapProvider();
+    LeapProvider() = default;
 
     void dispatchUpdateFrameEvent(const Leap::Frame &frame);
 
     using callback_function = std::function<void(const Leap::Frame &)>;
 public:
-    virtual ~LeapProvider();
+    virtual ~LeapProvider() = default;
+
     void addListener(callback_function);
 
 private:
