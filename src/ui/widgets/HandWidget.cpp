@@ -6,10 +6,18 @@
 #include <memory>
 #include <utility>
 #include <QTimer>
+#include <QVector3D>
+#include <QtWidgets>
 
-HandWidget::HandWidget(QWidget *parent) : QOpenGLWidget(parent),
-                                          color{1, 0, 1, 1},
-                                          logger{}, logHandler{} {
+HandWidget::HandWidget(QWidget * parent)
+:
+
+QOpenGLWidget (parent),
+color{1, 0, 1, 1},
+model{},
+view{},
+projection{},
+logger{}, logHandler{} {
 
 
 }
@@ -28,10 +36,10 @@ HandWidget::~HandWidget() {
 }
 
 float positions[] = {
-        -0.5f, -0.5f,
-        0.5f, -0.5f,
-        0.5f, 0.5f,
-        -0.5f, 0.5f,
+        -100, -100, 0,
+        100, -100, 0,
+        100, 100, 0,
+        -100, 100, 0
 
 };
 unsigned short indices[] = {
@@ -68,11 +76,11 @@ void HandWidget::initializeGL() {
 
     if (m_vbo->create()) {
         m_vbo->bind();
-        m_vbo->allocate(positions, 4 * 2 * sizeof(float));
+        m_vbo->allocate(positions, 4 * 3 * sizeof(float));
         m_vbo->setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
 
 
-        m_program->setAttributeBuffer("position", GL_FLOAT, 0, 2, 2 * sizeof(float));
+        m_program->setAttributeBuffer("position", GL_FLOAT, 0, 3, 3 * sizeof(float));
         m_program->enableAttributeArray(0);
 
 
@@ -88,7 +96,6 @@ void HandWidget::initializeGL() {
 //    QOpenGLDebugMessage()
     // axis vert array
 
-
 }
 
 void HandWidget::paintGL() {
@@ -96,6 +103,8 @@ void HandWidget::paintGL() {
 
     m_program->bind();
     m_program->setUniformValue("u_Color", color);
+    m_program->setUniformValue("transform", mvp);
+    qDebug() << glGetError();
 
     m_vao->bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
@@ -103,7 +112,43 @@ void HandWidget::paintGL() {
 
 }
 
+QMatrix4x4 lookAt(QVector3D eye, QVector3D center, QVector3D up) {
+    QVector3D direction = (eye - center).normalized();
+    QVector4D right = QVector3D::crossProduct(up, direction).normalized();
+
+    QMatrix4x4 view = {
+            right.x(), right.y(), right.z(), 0,
+            up.x(), up.y(), up.z(), 0,
+            direction.x(), direction.y(), direction.z(), 0,
+            0, 0, 0, 1
+    };
+    view.translate(-eye.x(), -eye.y(), -eye.z());
+    return view;
+}
+
+QMatrix4x4 getProjectionMatrix(float fovy, float aspect, float near, float far) {
+    float top = tan(fovy / 2) * near;
+    float bottom = -top;
+    float right = aspect * top;
+    float left = -right;
+
+    QMatrix4x4 proj = {
+            (2 * near) / (right - left), 0, (right + left) / (right - left), 0,
+            0, -(2 * near) / (top - bottom), (top + bottom) / (top - bottom), 0,
+            0, 0, -(far + near) / (far - near), -(2 * far * near) / (far - near),
+            0, 0, -1, 0
+    };
+    return proj;
+}
+
 void HandWidget::resizeGL(int width, int height) {
+
+    mvp.setToIdentity();
+    mvp.perspective(60, (float) width / (float) height, 0.01f, 10000);
+    mvp.lookAt({0, 0, 300}, {0, 0, 0}, {0, 1, 0});
+    mvp.translate(0, 0, 0);
+    qDebug() << mvp;
+
     // Adjust the viewport based on geometry changes,
     // such as screen rotation
     glViewport(0, 0, width, height);
@@ -127,5 +172,5 @@ void HandWidget::setZRotation(int angle) {
 }
 
 void HandWidget::setModel(std::shared_ptr<LeapHandController> model) {
-    this->model = model;
+    this->handModel = model;
 }

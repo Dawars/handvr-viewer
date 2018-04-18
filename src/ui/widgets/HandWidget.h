@@ -60,12 +60,17 @@ protected:
 private:
 
     QVector4D color;
+    QMatrix4x4 model;
+    QMatrix4x4 view;
+    QMatrix4x4 projection;
+    QMatrix4x4 mvp;
+
     std::unique_ptr<QOpenGLVertexArrayObject> m_vao;
     std::unique_ptr<QOpenGLBuffer> m_vbo;
     std::unique_ptr<QOpenGLBuffer> m_ibo;
     std::unique_ptr<QOpenGLShaderProgram> m_program;
     std::unique_ptr<QOpenGLTexture> m_texture;
-    std::shared_ptr<LeapHandController> model;
+    std::shared_ptr<LeapHandController> handModel;
 
     QOpenGLDebugLogger logger;
     LogHandler logHandler;
