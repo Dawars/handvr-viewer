@@ -4,10 +4,11 @@
 
 #include "HandRepresentation.h"
 
-HandRepresentation::HandRepresentation(HandPool *parent, Leap::Hand hand, HandModelBase::Chirality repChirality) {
+HandRepresentation::HandRepresentation(HandPool *parent, std::shared_ptr<Leap::Hand> hand,
+                                       HandModelBase::Chirality repChirality) {
 
     this->parent = parent;
-    HandID = hand.id();
+    HandID = hand->id();
     this->RepChirality = repChirality;
     this->MostRecentHand = hand;
     this->PostProcessHand = Leap::Hand();
@@ -21,11 +22,11 @@ HandModelBase::Chirality HandRepresentation::getRepChirality() const {
     return RepChirality;
 }
 
-const Leap::Hand &HandRepresentation::getMostRecentHand() const {
+const std::shared_ptr<Leap::Hand> &HandRepresentation::getMostRecentHand() const {
     return MostRecentHand;
 }
 
-void HandRepresentation::UpdateRepresentation(Leap::Hand hand) {
+void HandRepresentation::UpdateRepresentation(std::shared_ptr<Leap::Hand> hand) {
     MostRecentHand = hand;
     for (auto &handModel : handModels) {
         /*if (handModel.group != null && handModel.group.HandPostProcesses.GetPersistentEventCount() > 0) {
@@ -50,7 +51,8 @@ void HandRepresentation::Finish() {
 
 void HandRepresentation::AddModel(std::shared_ptr<HandModelBase> model) {
     handModels.push_back(model); // fixme add model
-    /*if (model->GetLeapHand() == nullptr) {
+    auto hand = model->GetLeapHand();
+    if (hand == nullptr) {
         model->SetLeapHand(MostRecentHand);
         model->InitHand();
         model->BeginHand();
@@ -58,9 +60,11 @@ void HandRepresentation::AddModel(std::shared_ptr<HandModelBase> model) {
     } else {
         model->SetLeapHand(MostRecentHand);
         model->BeginHand();
-    }*/
+    }
 }
 
 void HandRepresentation::RemoveModel(std::shared_ptr<HandModelBase> model) {
+    model->FinishHand();
     handModels.erase(std::remove(handModels.begin(), handModels.end(), model), handModels.end());
+
 }

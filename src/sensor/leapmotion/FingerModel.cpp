@@ -4,9 +4,9 @@
 
 #include "FingerModel.h"
 
-void FingerModel::SetLeapHand(Leap::Hand hand) {
+void FingerModel::SetLeapHand(std::shared_ptr<Leap::Hand> hand) {
     hand_ = hand;
 //        if (hand_ != null) {
-    finger_ = hand.fingers()[(int) fingerType];
+    finger_ = hand->fingers()[(int) fingerType];
 //        }
 }

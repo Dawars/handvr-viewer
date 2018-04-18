@@ -17,7 +17,7 @@ public:
     * MakeHandRepresentation receives a Hand and combines that with a HandModelBase to create a HandRepresentation
     * @param hand The Leap Hand data to be drive a HandModelBase
     */
-    std::shared_ptr<HandRepresentation> MakeHandRepresentation(Leap::Hand);
+    std::shared_ptr<HandRepresentation> MakeHandRepresentation(std::shared_ptr<Leap::Hand>);
 
     void RemoveHandRepresentation(HandRepresentation* );
 

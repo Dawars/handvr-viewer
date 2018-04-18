@@ -53,7 +53,7 @@ set(SOURCE_FILES
         src/sensor/leapmotion/HandModelBase.cpp src/sensor/leapmotion/HandModelBase.h
         src/sensor/leapmotion/HandModel.cpp src/sensor/leapmotion/HandModel.h
         src/sensor/leapmotion/FingerModel.cpp src/sensor/leapmotion/FingerModel.h
-        src/sensor/leapmotion/SkeletalHand.cpp src/sensor/leapmotion/SkeletalHand.h)
+        src/sensor/leapmotion/SkeletalHand.cpp src/sensor/leapmotion/SkeletalHand.h src/sensor/leapmotion/SkeletalFinger.cpp src/sensor/leapmotion/SkeletalFinger.h)
 include_directories(src/ui/widgets/)
 
 add_executable(handvr-viewer ${SOURCE_FILES} ${RESOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})

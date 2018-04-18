@@ -14,13 +14,27 @@ public:
         Left, Right
     };
 
-    virtual ~HandModelBase() = default;
+    /**
+    * Returns the Leap Hand object represented by this HandModel.
+    * Note that any physical quantities and directions obtained from the
+    * Leap Hand object are relative to the Leap Motion coordinate system,
+    * which uses a right-handed axes and units of millimeters.
+    */
+    virtual std::shared_ptr<Leap::Hand> GetLeapHand() const = 0;
 
+    /**
+    * Assigns a Leap Hand object to this hand model.
+    * Note that the Leap Hand objects are recreated every frame. The parent
+    * HandController calls this method to set or update the underlying hand.
+    */
+//    virtual void SetLeapHand(Leap::Hand hand) = 0;
+    virtual void SetLeapHand(std::shared_ptr<Leap::Hand> hand) = 0;
 
-    virtual Leap::Hand GetLeapHand() const = 0;
-
-    virtual void SetLeapHand(Leap::Hand hand) = 0;
-
+    /**
+       * Implement this function to initialise this hand after it is created.
+       * This function is called by the HandController during the Unity Update() phase when a new hand is detected
+       * by the Leap Motion device.
+       */
     virtual void InitHand() = 0;
 
     virtual void BeginHand();
@@ -38,6 +52,7 @@ public:
 protected:
     HandModelBase() = default;
 
+    virtual ~HandModelBase() = default;
 };
 
 

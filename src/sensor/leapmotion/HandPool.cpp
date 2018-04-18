@@ -15,9 +15,11 @@
      * @param modelType Filters for a type of hand model, for example, physics or graphics hands.
      */
 
-std::shared_ptr<HandRepresentation> HandPool::MakeHandRepresentation(Leap::Hand hand) {
-    HandModelBase::Chirality handChirality = hand.isRight() ? HandModelBase::Chirality::Right
-                                                            : HandModelBase::Chirality::Left;
+std::shared_ptr<HandRepresentation> HandPool::MakeHandRepresentation(std::shared_ptr<Leap::Hand> hand) {
+    qDebug() << "HandPool::MakeHandRepr " << hand->id();
+
+    HandModelBase::Chirality handChirality = hand->isRight() ? HandModelBase::Chirality::Right
+                                                             : HandModelBase::Chirality::Left;
     auto handRep = std::make_shared<HandRepresentation>(this, hand, handChirality);
 
     /*    for (int i = 0; i < ModelPool.Count; i++) {
@@ -33,7 +35,7 @@ std::shared_ptr<HandRepresentation> HandPool::MakeHandRepresentation(Leap::Hand 
               }
           }
       }*/
-    std::shared_ptr<HandModelBase> model = std::make_shared<SkeletalHand>();
+    std::shared_ptr<HandModelBase> model{std::make_shared<SkeletalHand>()};
     handRep->AddModel(model);
     activeHandReps.push_back(handRep);
     return handRep;
@@ -41,7 +43,7 @@ std::shared_ptr<HandRepresentation> HandPool::MakeHandRepresentation(Leap::Hand 
 
 void HandPool::RemoveHandRepresentation(HandRepresentation *handRepresentation) {
     auto it = std::find_if(activeHandReps.begin(), activeHandReps.end(), [&](std::shared_ptr<HandRepresentation> p) {
-        return &*p == handRepresentation; // assumes MyType has operator==
+        return &*p == handRepresentation;
     });
 
     if (it != activeHandReps.end()) {

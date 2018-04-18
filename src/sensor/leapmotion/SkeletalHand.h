@@ -9,9 +9,13 @@
 #include "HandModel.h"
 
 class SkeletalHand : public HandModel {
+public:
+    SkeletalHand() = default;
+
+    ~SkeletalHand() override = default;
 
     /** Updates the hand and its component parts by setting their positions and rotations. */
-    void UpdateHand();
+    void UpdateHand() override;
 
 protected:
     void SetPositions();

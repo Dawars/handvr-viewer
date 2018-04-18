@@ -17,10 +17,10 @@ public:
     Leap::Hand PostProcessHand;
     std::vector<std::shared_ptr<HandModelBase>> handModels; // heterogen collection for hand rendering?
 
-    HandRepresentation(HandPool *parent, Leap::Hand hand, HandModelBase::Chirality repChirality);
+    HandRepresentation(HandPool *parent, std::shared_ptr<Leap::Hand> hand, HandModelBase::Chirality repChirality);
 
 /** Calls Updates in HandModelBases that are part of this HandRepresentation */
-    void UpdateRepresentation(Leap::Hand hand);
+    void UpdateRepresentation(std::shared_ptr<Leap::Hand> hand);
 
     void AddModel(std::shared_ptr<HandModelBase> model);
 
@@ -28,7 +28,7 @@ public:
 
     HandModelBase::Chirality getRepChirality() const;
 
-    const Leap::Hand &getMostRecentHand() const;
+    const std::shared_ptr<Leap::Hand> &getMostRecentHand() const;
 
     /** To be called if the HandRepresentation no longer has a Leap Hand. */
     void Finish();
@@ -37,7 +37,7 @@ public:
 
 protected:
     HandModelBase::Chirality RepChirality;
-    Leap::Hand MostRecentHand;
+    std::shared_ptr<Leap::Hand> MostRecentHand;
 private:
     int HandID;
 };

@@ -9,10 +9,10 @@ void SkeletalHand::UpdateHand() {
 }
 
 void SkeletalHand::SetPositions() {
-    for (int f = 0; f < fingers.size(); ++f) {
-//        if (fingers[f] != null) {
-        fingers[f].UpdateFinger();
-//        }
+    for (auto finger : fingers) {
+        if (finger != nullptr) {
+            finger->UpdateFinger();
+        }
     }
 /*
     if (palm != null) {

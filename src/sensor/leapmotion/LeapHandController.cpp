@@ -5,6 +5,7 @@
 #include "../../ui/mainwindow.h"
 #include "LeapHandController.h"
 #include "LeapServiceProvider.h"
+#include <memory>
 
 using namespace Leap;
 
@@ -23,31 +24,42 @@ LeapHandController::~LeapHandController() {
 
 void LeapHandController::OnUpdateFrame(const Leap::Frame &frame) {
 //    this->frame = frame;
+/*
 
     std::cout << "Frame id: " << frame.id()
               << ", timestamp: " << frame.timestamp()
               << ", hands: " << frame.hands().count()
               << ", fingers: " << frame.fingers().count()
               << std::endl;
+*/
 
     updateHandRepresentations(graphicsHandReps, frame);
 
 }
 
-void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr<HandRepresentation>>& all_hand_reps,
+void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr<HandRepresentation>> &all_hand_reps,
                                                    const Leap::Frame &frame) {
-    for (auto& curHand : frame.hands()) {
 
-        auto it = all_hand_reps.find(curHand.id());
+
+    for (auto &hand : frame.hands()) {
+        std::cout << "LeapHandController::updateHandRepresentations " << hand.id() << std::endl;
+
+        std::shared_ptr<Leap::Hand> curHand = std::make_shared<Leap::Hand>(hand);
+        std::shared_ptr<HandRepresentation> rep;
+
+        auto it = all_hand_reps.find(curHand->id());
+        rep = it->second;
         if (it == all_hand_reps.end()) { // no hand representation, create new
-            auto rep = pool.MakeHandRepresentation(curHand);
-            all_hand_reps.insert(std::pair(curHand.id(), rep));
-        } else {
-            auto &rep = it->second;
+            rep = pool.MakeHandRepresentation(curHand);
+            if (rep != nullptr)
+                all_hand_reps.insert(std::pair(curHand->id(), rep));
+        }
+        if (rep != nullptr) {
             rep->IsMarked = true;
             rep->UpdateRepresentation(curHand);
             rep->LastUpdatedTime = (int) frame.timestamp();
         }
+
     }
 
     /** Mark-and-sweep to finish unused HandRepresentations */

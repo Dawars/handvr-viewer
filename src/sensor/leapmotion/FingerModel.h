@@ -6,6 +6,8 @@
 #define HANDVR_VIEWER_FINGERMODEL_H
 
 #include <Leap.h>
+#include <QMatrix4x4>
+#include <array>
 
 /**
   * The base class for all fingers.
@@ -20,23 +22,27 @@
 class FingerModel {
 /** The number of bones in a finger. */
 public:
-    const int NUM_BONES = 4;
+
+    FingerModel() = default;
+
+    virtual ~FingerModel() = default;
+
+    static const int NUM_BONES = 4;
 
     /** The number of joints in a finger. */
-    const int NUM_JOINTS = 3;
+    static const int NUM_JOINTS = 3;
 
     Leap::Finger::Type fingerType = Leap::Finger::TYPE_INDEX;
 
     // Unity references
     /** Bones positioned and rotated by FingerModel. */
-// Transform[] bones = new Transform[NUM_BONES];
+    std::array<QMatrix4x4, NUM_BONES> bones;
     /** Joints positioned and rotated by FingerModel. */
-// Transform[] joints = new Transform[NUM_BONES - 1];
-
+    std::array<QMatrix4x4, NUM_BONES - 1> joints;
 protected:
     // Leap references
     /** The Leap Hand object. */
-    Leap::Hand hand_;
+    std::shared_ptr<Leap::Hand> hand_;
     /** The Leap Finger object. */
     Leap::Finger finger_;
 
@@ -46,10 +52,10 @@ protected:
     * finger. The tracking data in the Leap objects are used to update the FingerModel.
     */
 public:
-    void SetLeapHand(Leap::Hand hand);
+    void SetLeapHand(std::shared_ptr<Leap::Hand> hand);
 
     /** The Leap Hand object. */
-    Leap::Hand GetLeapHand() { return hand_; }
+    std::shared_ptr<Leap::Hand> GetLeapHand() { return hand_; }
 
     /** The Leap Finger object. */
     Leap::Finger GetLeapFinger() { return finger_; }
@@ -69,7 +75,7 @@ public:
     * graphics hand models and in the FixedUpdate() phase for physics hand
     * models.
     */
-    virtual void UpdateFinger() {};
+    virtual void UpdateFinger() = 0;
 
 };
 
