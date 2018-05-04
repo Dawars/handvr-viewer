@@ -49,12 +49,14 @@ void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr
         std::shared_ptr<HandRepresentation> rep;
 
         auto it = all_hand_reps.find(curHand->id());
-        rep = it->second;
         if (it == all_hand_reps.end()) { // no hand representation, create new
             rep = pool.MakeHandRepresentation(curHand);
             if (rep != nullptr)
                 all_hand_reps.insert(std::pair(curHand->id(), rep));
+        }else{
+            rep = it->second;
         }
+
         if (rep != nullptr) {
             rep->IsMarked = true;
             rep->UpdateRepresentation(curHand);

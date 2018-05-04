@@ -42,11 +42,11 @@ struct Vertex {
 };
 
 Vertex axis[] = {
-        {QVector3D(0, 0, 0), QVector3D(1, 0, 0)},
+        {QVector3D(0, 0, 0),  QVector3D(1, 0, 0)},
         {QVector3D(10, 0, 0), QVector3D(1, 0, 0)},
-        {QVector3D(0, 0, 0), QVector3D(0, 1, 0)},
+        {QVector3D(0, 0, 0),  QVector3D(0, 1, 0)},
         {QVector3D(0, 10, 0), QVector3D(0, 1, 0)},
-        {QVector3D(0, 0, 0), QVector3D(0, 0, 1)},
+        {QVector3D(0, 0, 0),  QVector3D(0, 0, 1)},
         {QVector3D(0, 0, 10), QVector3D(0, 0, 1)},
 };
 
@@ -97,43 +97,50 @@ void HandWidget::initializeGL() {
 }
 
 void HandWidget::paintGL() {
-/*
-    // update data
-    const auto &hands = handController->getHandRepresentation();
-    if (!hands.empty()) {
-        const auto &hand = hands[0]->handModels[0]->GetLeapHand();
-
-        for (auto &finger: hand->fingers()) {
-            for (int i = 0; i <= Leap::Bone::Type::TYPE_DISTAL; ++i) {
-                int fingerId = finger.type();
-
-                const Leap::Bone &bone = finger.bone(static_cast<Leap::Bone::Type>(i));
-
-                const Leap::Vector &pos = bone.prevJoint();
-
-                int id = 1 + 5 * fingerId + i;
-                positions[3 * id + 0] = pos.x;
-                positions[3 * id + 1] = pos.y;
-                positions[3 * id + 2] = pos.z;
-
-            }
-        }
-    }*/
-
-
     //render
     glClearColor(0.55f, 0.55f, 0.55f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     axisShader->bind();
-//    axisShader->setUniformValue("u_Color", color);
-    axisShader->setUniformValue("transform", mvp * model);
+    axisShader->setUniformValue("transform", mvp);
+// coordinate system center
+    m_vao_axis->bind();
+    glDrawArrays(GL_LINES, 0, 6);
+
+    // update data
+    const auto &hands = handController->getHandRepresentation();
+    for (const auto &handRep : hands) {
+        const auto &hand = handRep->handModels[0]->GetLeapHand();
+
+        const Leap::Vector &handPos = hand->palmPosition();
+        model.setToIdentity();
+        model.translate(handPos.x, handPos.y, handPos.z);
+
+        /* for (auto &finger: hand->fingers()) {
+             for (int i = 0; i <= Leap::Bone::Type::TYPE_DISTAL; ++i) {
+                 int fingerId = finger.type();
+
+                 const Leap::Bone &bone = finger.bone(static_cast<Leap::Bone::Type>(i));
+
+                 const Leap::Vector &pos = bone.prevJoint();
+
+                 int id = 1 + 5 * fingerId + i;
+                 positions[3 * id + 0] = pos.x;
+                 positions[3 * id + 1] = pos.y;
+                 positions[3 * id + 2] = pos.z;
+
+             }
+         }*/
+
+    // rendering hand center
+    const QMatrix4x4 &handMat = mvp * model;
+    axisShader->setUniformValue("transform", handMat);
 
     m_vao_axis->bind();
-//    glDrawElements(GL_LINES, 9, GL_UNSIGNED_SHORT, nullptr);
     glDrawArrays(GL_LINES, 0, 6);
 
 
+}
 //    handRenderer->render();
 
     GLenum error = glGetError();
@@ -170,6 +177,6 @@ void HandWidget::setZRotation(int angle) {
 
 }
 
-void HandWidget::setModel(std::shared_ptr<LeapHandController> model) {
+void HandWidget::setModel(std::shared_ptr <LeapHandController> model) {
     this->handController = model;
 }
