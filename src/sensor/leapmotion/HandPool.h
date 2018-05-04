@@ -25,6 +25,8 @@ public:
 
 private:
     std::vector<std::shared_ptr<HandRepresentation>> activeHandReps;
+public:
+    const std::vector<std::shared_ptr<HandRepresentation>> &getActiveHandReps() const;
 
 };
 

@@ -34,6 +34,7 @@ void LeapHandController::OnUpdateFrame(const Leap::Frame &frame) {
 */
 
     updateHandRepresentations(graphicsHandReps, frame);
+    // todo refresh widget
 
 }
 
@@ -79,6 +80,10 @@ void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr
         all_hand_reps.erase(toBeDeleted->getHandID());
         toBeDeleted->Finish();
     }
+}
+
+std::vector<std::shared_ptr<HandRepresentation>> LeapHandController::getHandRepresentation() const {
+    return pool.getActiveHandReps();
 }
 
 

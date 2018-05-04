@@ -19,6 +19,7 @@ public:
     ~LeapHandController();
 
 
+    std::vector<std::shared_ptr<HandRepresentation>> getHandRepresentation() const;
 protected:
     virtual void OnUpdateFrame(const Leap::Frame &);
 

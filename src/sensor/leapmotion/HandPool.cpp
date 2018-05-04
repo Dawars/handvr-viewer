@@ -82,3 +82,7 @@ void HandPool::ReturnToPool(std::shared_ptr<HandModelBase> model) {
      modelGroup.ReturnToGroup(model);
  */
 }
+
+const std::vector<std::shared_ptr<HandRepresentation>> &HandPool::getActiveHandReps() const {
+    return activeHandReps;
+}

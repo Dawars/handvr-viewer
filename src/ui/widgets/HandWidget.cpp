@@ -9,16 +9,17 @@
 #include <QVector3D>
 #include <QtWidgets>
 
-HandWidget::HandWidget(QWidget * parent)
-:
+HandWidget::HandWidget(QWidget *parent)
+        :
 
-QOpenGLWidget (parent),
-color{1, 0, 1, 1},
-model{},
-view{},
-projection{},
-logger{}, logHandler{} {
+        QOpenGLWidget(parent),
+        color{1, 0, 1, 1},
+        model{},
+        view{},
+        projection{},
+        logger{}, logHandler{} {
 
+    connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 
 }
 
@@ -28,124 +29,122 @@ HandWidget::~HandWidget() {
     makeCurrent();
 
 
-//    m_vbo->destroy();
+//    m_vbo_axis->destroy();
 //    m_ibo->destroy();
-//    m_vao->destroy();
+//    m_vao_axis->destroy();
 
     doneCurrent();
 }
 
-float positions[] = {
-        -100, -100, 0,
-        100, -100, 0,
-        100, 100, 0,
-        -100, 100, 0
+struct Vertex {
+    QVector3D position;
+    QVector3D color;
+};
 
+Vertex axis[] = {
+        {QVector3D(0, 0, 0), QVector3D(1, 0, 0)},
+        {QVector3D(10, 0, 0), QVector3D(1, 0, 0)},
+        {QVector3D(0, 0, 0), QVector3D(0, 1, 0)},
+        {QVector3D(0, 10, 0), QVector3D(0, 1, 0)},
+        {QVector3D(0, 0, 0), QVector3D(0, 0, 1)},
+        {QVector3D(0, 0, 10), QVector3D(0, 0, 1)},
 };
-unsigned short indices[] = {
-        0, 1, 2,
-        2, 3, 0
-};
+
 
 void HandWidget::initializeGL() {
     initializeOpenGLFunctions();
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    /*if (logger.initialize()) {// will get destroyed out of scope
+    if (logger.initialize()) {// will get destroyed out of scope
         connect(&logger, &QOpenGLDebugLogger::messageLogged, &logHandler, &LogHandler::handleLoggedMessage);
         logger.startLogging();
     } else {
         qDebug() << "Debug logger not enabled";
-    }*/
+    }
 
 
-    m_vao = std::make_unique<QOpenGLVertexArrayObject>();
-    m_vbo = std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::VertexBuffer);
+    m_vao_axis = std::make_unique<QOpenGLVertexArrayObject>();
+    m_vbo_axis = std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::VertexBuffer);
     m_ibo = std::make_unique<QOpenGLBuffer>(QOpenGLBuffer::IndexBuffer);
 
-//    m_shader = new QOpenGLShader(QOpenGLShader::ShaderTypeBit::Vertex);
-//    m_shader->compileSourceFile();
-    m_program = std::make_unique<QOpenGLShaderProgram>();
-    m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Common.vert");
-    m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Common.frag");
-    m_program->link();
+    axisShader = std::make_unique<QOpenGLShaderProgram>();
+    axisShader->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Axis.vert");
+    axisShader->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Axis.frag");
+    axisShader->link();
 
-    m_vao->create();
-    if (m_vao->isCreated())
-        m_vao->bind();
+    m_vao_axis->create();
+    if (m_vao_axis->isCreated())
+        m_vao_axis->bind();
 
-    if (m_vbo->create()) {
-        m_vbo->bind();
-        m_vbo->allocate(positions, 4 * 3 * sizeof(float));
-        m_vbo->setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
+    if (m_vbo_axis->create()) {
+        m_vbo_axis->bind();
+        m_vbo_axis->allocate(axis, 6 * sizeof(Vertex));
+        m_vbo_axis->setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
 
 
-        m_program->setAttributeBuffer("position", GL_FLOAT, 0, 3, 3 * sizeof(float));
-        m_program->enableAttributeArray(0);
+        axisShader->setAttributeBuffer("position", GL_FLOAT, offsetof(Vertex, position), 3, sizeof(Vertex));
+        axisShader->enableAttributeArray(0);
+        axisShader->setAttributeBuffer("color", GL_FLOAT, offsetof(Vertex, color), 3, sizeof(Vertex));
+        axisShader->enableAttributeArray(1);
 
 
-        m_ibo->create();
-        m_ibo->bind();
-        m_ibo->allocate(indices, 6 * sizeof(unsigned short));
-        m_ibo->setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
-
-        m_vbo.release();
+        m_vbo_axis.release();
+        m_vbo_color.release();
     }
-    //    m_texture = new QOpenGLTexture(QImage(...));
+//    handRenderer = std::make_shared<RenderHands>(this, *handController);
 
-//    QOpenGLDebugMessage()
-    // axis vert array
-
+    glEnable(GL_DEPTH_TEST);
 }
 
 void HandWidget::paintGL() {
-    glClear(GL_COLOR_BUFFER_BIT);
+/*
+    // update data
+    const auto &hands = handController->getHandRepresentation();
+    if (!hands.empty()) {
+        const auto &hand = hands[0]->handModels[0]->GetLeapHand();
 
-    m_program->bind();
-    m_program->setUniformValue("u_Color", color);
-    m_program->setUniformValue("transform", mvp);
-    qDebug() << glGetError();
+        for (auto &finger: hand->fingers()) {
+            for (int i = 0; i <= Leap::Bone::Type::TYPE_DISTAL; ++i) {
+                int fingerId = finger.type();
 
-    m_vao->bind();
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+                const Leap::Bone &bone = finger.bone(static_cast<Leap::Bone::Type>(i));
+
+                const Leap::Vector &pos = bone.prevJoint();
+
+                int id = 1 + 5 * fingerId + i;
+                positions[3 * id + 0] = pos.x;
+                positions[3 * id + 1] = pos.y;
+                positions[3 * id + 2] = pos.z;
+
+            }
+        }
+    }*/
 
 
-}
+    //render
+    glClearColor(0.55f, 0.55f, 0.55f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-QMatrix4x4 lookAt(QVector3D eye, QVector3D center, QVector3D up) {
-    QVector3D direction = (eye - center).normalized();
-    QVector4D right = QVector3D::crossProduct(up, direction).normalized();
+    axisShader->bind();
+//    axisShader->setUniformValue("u_Color", color);
+    axisShader->setUniformValue("transform", mvp * model);
 
-    QMatrix4x4 view = {
-            right.x(), right.y(), right.z(), 0,
-            up.x(), up.y(), up.z(), 0,
-            direction.x(), direction.y(), direction.z(), 0,
-            0, 0, 0, 1
-    };
-    view.translate(-eye.x(), -eye.y(), -eye.z());
-    return view;
-}
+    m_vao_axis->bind();
+//    glDrawElements(GL_LINES, 9, GL_UNSIGNED_SHORT, nullptr);
+    glDrawArrays(GL_LINES, 0, 6);
 
-QMatrix4x4 getProjectionMatrix(float fovy, float aspect, float near, float far) {
-    float top = tan(fovy / 2) * near;
-    float bottom = -top;
-    float right = aspect * top;
-    float left = -right;
 
-    QMatrix4x4 proj = {
-            (2 * near) / (right - left), 0, (right + left) / (right - left), 0,
-            0, -(2 * near) / (top - bottom), (top + bottom) / (top - bottom), 0,
-            0, 0, -(far + near) / (far - near), -(2 * far * near) / (far - near),
-            0, 0, -1, 0
-    };
-    return proj;
+//    handRenderer->render();
+
+    GLenum error = glGetError();
+    if (error != 0)qDebug() << error;
 }
 
 void HandWidget::resizeGL(int width, int height) {
 
     mvp.setToIdentity();
     mvp.perspective(60, (float) width / (float) height, 0.01f, 10000);
-    mvp.lookAt({0, 0, 300}, {0, 0, 0}, {0, 1, 0});
+    mvp.lookAt({100, 100, 300}, {0, 100, 0}, {0, 1, 0});
     mvp.translate(0, 0, 0);
     qDebug() << mvp;
 
@@ -172,5 +171,5 @@ void HandWidget::setZRotation(int angle) {
 }
 
 void HandWidget::setModel(std::shared_ptr<LeapHandController> model) {
-    this->handModel = model;
+    this->handController = model;
 }
