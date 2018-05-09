@@ -14,7 +14,6 @@ class HandRepresentation {
 public:
     int LastUpdatedTime;
     bool IsMarked;
-    Leap::Hand PostProcessHand;
     std::vector<std::shared_ptr<HandModelBase>> handModels; // heterogen collection for hand rendering?
 
     HandRepresentation(HandPool *parent, std::shared_ptr<Leap::Hand> hand, HandModelBase::Chirality repChirality);

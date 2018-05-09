@@ -8,10 +8,9 @@ HandRepresentation::HandRepresentation(HandPool *parent, std::shared_ptr<Leap::H
                                        HandModelBase::Chirality repChirality) {
 
     this->parent = parent;
-    HandID = hand->id();
+    this->HandID = hand->id();
     this->RepChirality = repChirality;
     this->MostRecentHand = hand;
-    this->PostProcessHand = Leap::Hand();
 }
 
 int HandRepresentation::getHandID() const {

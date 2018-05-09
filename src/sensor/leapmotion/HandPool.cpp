@@ -10,11 +10,9 @@
 #include <memory>
 
 /**
-     * MakeHandRepresentation receives a Hand and combines that with a HandModelBase to create a HandRepresentation
-     * @param hand The Leap Hand data to be drive a HandModelBase
-     * @param modelType Filters for a type of hand model, for example, physics or graphics hands.
-     */
-
+ * MakeHandRepresentation receives a Hand and combines that with a HandModelBase to create a HandRepresentation
+ * @param hand The Leap Hand data to be drive a HandModelBase
+ */
 std::shared_ptr<HandRepresentation> HandPool::MakeHandRepresentation(std::shared_ptr<Leap::Hand> hand) {
     qDebug() << "HandPool::MakeHandRepr " << hand->id();
 
@@ -22,19 +20,6 @@ std::shared_ptr<HandRepresentation> HandPool::MakeHandRepresentation(std::shared
                                                              : HandModelBase::Chirality::Left;
     auto handRep = std::make_shared<HandRepresentation>(this, hand, handChirality);
 
-    /*    for (int i = 0; i < ModelPool.Count; i++) {
-          ModelGroup group = ModelPool[i];
-          if (group.IsEnabled) {
-              HandModelBase model = group.TryGetModel(handChirality);
-              if (model != null) {
-                  handRep.AddModel(model);
-                  if (!modelToHandRepMapping.ContainsKey(model)) {
-                      model.group = group;
-                      modelToHandRepMapping.Add(model, handRep);
-                  }
-              }
-          }
-      }*/
     std::shared_ptr<HandModelBase> model{std::make_shared<SkeletalHand>()};
     handRep->AddModel(model);
     activeHandReps.push_back(handRep);

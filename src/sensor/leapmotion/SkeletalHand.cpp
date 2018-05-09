@@ -9,8 +9,8 @@ void SkeletalHand::UpdateHand() {
 }
 
 void SkeletalHand::SetPositions() {
-    for (auto finger : fingers) {
-        if (finger != nullptr) {
+    for (const auto &finger : fingers) {
+        if (finger != nullptr) {// fixme null
             finger->UpdateFinger();
         }
     }

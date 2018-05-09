@@ -23,15 +23,6 @@ LeapHandController::~LeapHandController() {
 }
 
 void LeapHandController::OnUpdateFrame(const Leap::Frame &frame) {
-//    this->frame = frame;
-/*
-
-    std::cout << "Frame id: " << frame.id()
-              << ", timestamp: " << frame.timestamp()
-              << ", hands: " << frame.hands().count()
-              << ", fingers: " << frame.fingers().count()
-              << std::endl;
-*/
 
     updateHandRepresentations(graphicsHandReps, frame);
     // todo refresh widget
@@ -42,7 +33,7 @@ void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr
                                                    const Leap::Frame &frame) {
 
 
-    for (auto &hand : frame.hands()) {
+    for (const auto &hand : frame.hands()) {
         std::cout << "LeapHandController::updateHandRepresentations " << hand.id() << std::endl;
 
         std::shared_ptr<Leap::Hand> curHand = std::make_shared<Leap::Hand>(hand);
@@ -53,7 +44,7 @@ void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr
             rep = pool.MakeHandRepresentation(curHand);
             if (rep != nullptr)
                 all_hand_reps.insert(std::pair(curHand->id(), rep));
-        }else{
+        } else {
             rep = it->second;
         }
 
