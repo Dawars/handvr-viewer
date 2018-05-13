@@ -7,7 +7,6 @@
 
 
 #include "HandModelBase.h"
-#include "FingerModel.h"
 #include <array>
 #include <qlogging.h>
 
@@ -15,7 +14,6 @@ class HandModel : public HandModelBase {
     /** The number of fingers on a hand.*/
 public:
     static const int NUM_FINGERS = 5;
-    std::array<std::shared_ptr<FingerModel>, NUM_FINGERS> fingers;//fixme empty
 
     // Leap references
     /** The Leap Hand object this hand model represents. */

@@ -14,7 +14,7 @@ class HandRepresentation {
 public:
     int LastUpdatedTime;
     bool IsMarked;
-    std::vector<std::shared_ptr<HandModelBase>> handModels; // heterogen collection for hand rendering?
+    std::shared_ptr<HandModelBase> handModel;
 
     HandRepresentation(HandPool *parent, std::shared_ptr<Leap::Hand> hand, HandModelBase::Chirality repChirality);
 
@@ -23,7 +23,6 @@ public:
 
     void AddModel(std::shared_ptr<HandModelBase> model);
 
-    void RemoveModel(std::shared_ptr<HandModelBase> model);
 
     HandModelBase::Chirality getRepChirality() const;
 

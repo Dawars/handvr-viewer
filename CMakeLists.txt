@@ -7,10 +7,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-pedantic)
-#add_compile_options(-Werror)
-add_compile_options(-Werror=unused-variable)
+add_compile_options(-Werror)
+#add_compile_options(-Werror=unused-variable)
 #add_compile_options(-fno-elide-constructors)
-add_compile_options(-O0)
+add_compile_options(-O3)
 
 # Leap
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
@@ -29,7 +29,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+#find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
@@ -37,12 +37,10 @@ find_package(Qt5Gui REQUIRED)
 #find_package(Qt5Quick REQUIRED)
 
 
-set(UI_FILES src/ui/mainwindow.ui src/ui/mydialog.ui)
+set(UI_FILES src/ui/mainwindow.ui)
 set(SOURCE_FILES
         src/main.cpp
         src/ui/mainwindow.cpp src/ui/mainwindow.h
-        src/ui/mydialog.cpp src/ui/mydialog.h
-        src/mano/Mano.cpp src/mano/Mano.h
         src/sensor/leapmotion/LeapHandController.cpp src/sensor/leapmotion/LeapHandController.h
         src/ui/widgets/HandWidget.cpp src/ui/widgets/HandWidget.h
         src/util/LogHandler.cpp src/util/LogHandler.h
@@ -52,12 +50,11 @@ set(SOURCE_FILES
         src/sensor/leapmotion/HandPool.cpp src/sensor/leapmotion/HandPool.h
         src/sensor/leapmotion/HandModelBase.cpp src/sensor/leapmotion/HandModelBase.h
         src/sensor/leapmotion/HandModel.cpp src/sensor/leapmotion/HandModel.h
-        src/sensor/leapmotion/FingerModel.cpp src/sensor/leapmotion/FingerModel.h
-        src/sensor/leapmotion/SkeletalHand.cpp src/sensor/leapmotion/SkeletalHand.h src/sensor/leapmotion/SkeletalFinger.cpp src/sensor/leapmotion/SkeletalFinger.h)
+        src/sensor/leapmotion/SkeletalHand.cpp src/sensor/leapmotion/SkeletalHand.h src/ui/HandRenderer.h src/ui/SkeletonHandRenderer.cpp src/ui/SkeletonHandRenderer.h)
 include_directories(src/ui/widgets/)
 
 add_executable(handvr-viewer ${SOURCE_FILES} ${RESOURCE_FILES} ${UI_FILES} ${RESOURCE_FILES})
 
-target_link_libraries(handvr-viewer Eigen3::Eigen)
+#target_link_libraries(handvr-viewer Eigen3::Eigen)
 target_link_libraries(handvr-viewer Qt5::Widgets Qt5::Gui)
 target_link_libraries(handvr-viewer ${Leap_BUILD_LIBRARIES} )

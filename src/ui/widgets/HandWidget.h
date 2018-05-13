@@ -17,6 +17,7 @@
 #include <src/sensor/leapmotion/LeapHandController.h>
 #include <QOpenGLDebugLogger>
 #include <src/util/LogHandler.h>
+#include <src/ui/HandRenderer.h>
 
 class HandWidget : public QOpenGLWidget, protected QOpenGLFunctions {
 Q_OBJECT
@@ -25,9 +26,13 @@ Q_OBJECT
 public:
     explicit HandWidget(QWidget *parent = 0);
 
-    ~HandWidget();
+    ~HandWidget() = default;
 
     void setModel(std::shared_ptr<LeapHandController> model);
+
+    QMatrix4x4 getProjection() const;
+    QMatrix4x4 getView() const;
+    QMatrix4x4 getVP() const;
 
 public slots:
 
@@ -64,19 +69,13 @@ private:
     QMatrix4x4 model;
     QMatrix4x4 view;
     QMatrix4x4 projection;
-    QMatrix4x4 mvp;
-    std::unique_ptr<QOpenGLVertexArrayObject> m_vao_axis;
-    std::unique_ptr<QOpenGLBuffer> m_vbo_axis;
-    std::unique_ptr<QOpenGLBuffer> m_vbo_color;
-    std::unique_ptr<QOpenGLBuffer> m_ibo;
-    std::unique_ptr<QOpenGLShaderProgram> axisShader;
-    std::unique_ptr<QOpenGLTexture> m_texture;
+    QMatrix4x4 viewprojection;
     std::shared_ptr<LeapHandController> handController;
 
     QOpenGLDebugLogger logger;
     LogHandler logHandler;
 
-//    std::shared_ptr<RenderHands> handRenderer;
+    std::shared_ptr<HandRenderer> handRenderer;
 };
 
 

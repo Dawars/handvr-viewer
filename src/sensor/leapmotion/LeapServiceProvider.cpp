@@ -6,7 +6,7 @@
 
 
 void LeapServiceProvider::onConnect(const Leap::Controller &controller) {
-    std::cout << "Connected" << std::endl;
+    std::cout << "Connected" << controller.isConnected() << std::endl;
 }
 
 

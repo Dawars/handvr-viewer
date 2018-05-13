@@ -21,8 +21,6 @@ public:
 
     void RemoveHandRepresentation(HandRepresentation* );
 
-    void ReturnToPool(std::shared_ptr<HandModelBase> model);
-
 private:
     std::vector<std::shared_ptr<HandRepresentation>> activeHandReps;
 public:

@@ -5,6 +5,7 @@
 #include "../../ui/mainwindow.h"
 #include "LeapHandController.h"
 #include "LeapServiceProvider.h"
+#include <qdebug.h>
 #include <memory>
 
 using namespace Leap;
@@ -18,15 +19,8 @@ LeapHandController::LeapHandController(std::shared_ptr<LeapProvider> provider) {
     provider->addListener([=](const Leap::Frame &frame) { this->OnUpdateFrame(frame); });
 }
 
-LeapHandController::~LeapHandController() {
-
-}
-
 void LeapHandController::OnUpdateFrame(const Leap::Frame &frame) {
-
     updateHandRepresentations(graphicsHandReps, frame);
-    // todo refresh widget
-
 }
 
 void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr<HandRepresentation>> &all_hand_reps,
@@ -34,7 +28,7 @@ void LeapHandController::updateHandRepresentations(std::map<int, std::shared_ptr
 
 
     for (const auto &hand : frame.hands()) {
-        std::cout << "LeapHandController::updateHandRepresentations " << hand.id() << std::endl;
+        qDebug() << "LeapHandController::updateHandRepresentations " << hand.id();
 
         std::shared_ptr<Leap::Hand> curHand = std::make_shared<Leap::Hand>(hand);
         std::shared_ptr<HandRepresentation> rep;

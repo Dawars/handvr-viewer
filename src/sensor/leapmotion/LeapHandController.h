@@ -16,10 +16,11 @@ class LeapHandController {
 public:
     LeapHandController(std::shared_ptr<LeapProvider>);
 
-    ~LeapHandController();
+    ~LeapHandController() = default;
 
 
     std::vector<std::shared_ptr<HandRepresentation>> getHandRepresentation() const;
+
 protected:
     virtual void OnUpdateFrame(const Leap::Frame &);
 
@@ -34,7 +35,7 @@ protected:
    * @param all_hand_reps = A dictionary of Leap Hand ID's with a paired HandRepresentation
    * @param frame The Leap Frame containing Leap Hand data for each currently tracked hand
    */
-    void updateHandRepresentations(std::map<int, std::shared_ptr<HandRepresentation>>&, const Leap::Frame&);
+    void updateHandRepresentations(std::map<int, std::shared_ptr<HandRepresentation>> &, const Leap::Frame &);
 
     std::map<int, std::shared_ptr<HandRepresentation>> graphicsHandReps;
     HandPool pool;

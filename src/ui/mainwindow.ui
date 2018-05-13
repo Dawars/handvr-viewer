@@ -58,14 +58,14 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>zRot</string>
+          <string>Red</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QSlider" name="rotZSlider">
+        <widget class="QSlider" name="rotXSlider">
          <property name="maximum">
-          <number>360</number>
+          <number>256</number>
          </property>
          <property name="singleStep">
           <number>16</number>
@@ -88,14 +88,14 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>xRot</string>
+          <string>Green</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QSlider" name="rotXSlider">
+        <widget class="QSlider" name="rotYSlider">
          <property name="maximum">
-          <number>360</number>
+          <number>256</number>
          </property>
          <property name="singleStep">
           <number>16</number>
@@ -115,14 +115,14 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>yrot</string>
+          <string>Blue</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QSlider" name="rotYSlider">
+        <widget class="QSlider" name="rotZSlider">
          <property name="maximum">
-          <number>360</number>
+          <number>256</number>
          </property>
          <property name="singleStep">
           <number>16</number>

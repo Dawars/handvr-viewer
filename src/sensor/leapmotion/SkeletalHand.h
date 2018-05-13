@@ -16,9 +16,6 @@ public:
 
     /** Updates the hand and its component parts by setting their positions and rotations. */
     void UpdateHand() override;
-
-protected:
-    void SetPositions();
 };
 
 
